@@ -13,7 +13,7 @@ function detectLocale(req: NextRequest): Locale {
   return "en";
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
