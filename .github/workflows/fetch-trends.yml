@@ -2,8 +2,8 @@ name: Fetch Trends
 
 on:
   schedule:
-    - cron: "0 */6 * * *"   # 6時間ごと
-  workflow_dispatch:          # 手動実行も可
+    - cron: "0 */6 * * *"   # 6時間ごと (0時/6時/12時/18時 UTC)
+  workflow_dispatch:          # 手動実行ボタン
 
 jobs:
   fetch:
@@ -11,7 +11,18 @@ jobs:
     steps:
       - name: Trigger fetch
         run: |
-          curl -X POST "${{ secrets.SITE_URL }}/api/cron/fetch-trends" \
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.SITE_URL }}/api/cron/fetch-trends" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json" \
-            --fail
+            -H "Content-Type: application/json")
+
+          body=$(echo "$response" | head -n -1)
+          status=$(echo "$response" | tail -n 1)
+
+          echo "Status: $status"
+          echo "Response: $body"
+
+          if [ "$status" != "200" ]; then
+            echo "Error: unexpected status $status"
+            exit 1
+          fi
