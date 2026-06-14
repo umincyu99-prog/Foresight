@@ -30,7 +30,7 @@ export async function getTrends(
   let query = supabase
     .from("trends")
     .select("*")
-    .order("score", { ascending: false })
+    .order("fetched_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
   if (category) {
