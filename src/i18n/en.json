@@ -1,0 +1,19 @@
+{
+  "site": {
+    "title": "Gadget Trend",
+    "description": "Latest gadget & gaming trends from around the world"
+  },
+  "nav": {
+    "all": "All",
+    "gadget": "Gadgets",
+    "gaming": "Gaming",
+    "tech": "Technology"
+  },
+  "card": {
+    "readMore": "Read more",
+    "source": "Source",
+    "score": "Score"
+  },
+  "empty": "No trends available",
+  "loading": "Loading..."
+}

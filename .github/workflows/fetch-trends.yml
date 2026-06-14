@@ -1,0 +1,17 @@
+name: Fetch Trends
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # 6時間ごと
+  workflow_dispatch:          # 手動実行も可
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger fetch
+        run: |
+          curl -X POST "${{ secrets.SITE_URL }}/api/cron/fetch-trends" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --fail
