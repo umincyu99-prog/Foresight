@@ -3,11 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 
-export default function LocaleSwitcher({
-  currentLocale,
-}: {
-  currentLocale: Locale;
-}) {
+export default function LocaleSwitcher({ currentLocale }: { currentLocale: Locale }) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -18,15 +14,15 @@ export default function LocaleSwitcher({
   }
 
   return (
-    <div className="flex gap-1 text-sm">
+    <div className="flex items-center gap-0.5 bg-black/10 dark:bg-white/10 rounded-lg p-0.5">
       {(["ja", "en"] as Locale[]).map((l) => (
         <button
           key={l}
           onClick={() => switchLocale(l)}
-          className={`px-2 py-1 rounded font-medium transition-colors ${
+          className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${
             l === currentLocale
-              ? "bg-gray-900 text-white"
-              : "text-gray-500 hover:text-gray-900"
+              ? "bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm"
+              : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
           }`}
         >
           {l === "ja" ? "日本語" : "EN"}

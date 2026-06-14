@@ -5,45 +5,45 @@ import { Suspense } from "react";
 
 type NavKeys = "all" | "gadget" | "gaming" | "tech";
 
-function CategoryNavInner({
-  locale,
-  t,
-}: {
-  locale: string;
-  t: Record<NavKeys, string>;
-}) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const active = searchParams.get("category") ?? "all";
+const CATEGORY_COLORS: Record<NavKeys, string> = {
+  all:    "#6366f1",
+  gadget: "#3b82f6",
+  gaming: "#a855f7",
+  tech:   "#10b981",
+};
 
-  const categories: NavKeys[] = ["all", "gadget", "gaming", "tech"];
+function CategoryNavInner({ t }: { t: Record<NavKeys, string> }) {
+  const router      = useRouter();
+  const pathname    = usePathname();
+  const searchParams = useSearchParams();
+  const active      = (searchParams.get("category") ?? "all") as NavKeys;
 
   function navigate(cat: NavKeys) {
     const params = new URLSearchParams(searchParams.toString());
-    if (cat === "all") {
-      params.delete("category");
-    } else {
-      params.set("category", cat);
-    }
+    cat === "all" ? params.delete("category") : params.set("category", cat);
     router.push(`${pathname}?${params.toString()}`);
   }
 
   return (
-    <nav className="flex gap-2 overflow-x-auto pb-1">
-      {categories.map((cat) => (
-        <button
-          key={cat}
-          onClick={() => navigate(cat)}
-          className={`whitespace-nowrap px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-            active === cat
-              ? "bg-gray-900 text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          }`}
-        >
-          {t[cat]}
-        </button>
-      ))}
+    <nav className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
+      {(["all", "gadget", "gaming", "tech"] as NavKeys[]).map((cat) => {
+        const isActive = active === cat;
+        const color    = CATEGORY_COLORS[cat];
+        return (
+          <button
+            key={cat}
+            onClick={() => navigate(cat)}
+            className="whitespace-nowrap px-3 py-1 rounded-full text-xs font-semibold transition-all"
+            style={
+              isActive
+                ? { background: color + "22", color, border: `1px solid ${color}55` }
+                : { background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border)" }
+            }
+          >
+            {t[cat]}
+          </button>
+        );
+      })}
     </nav>
   );
 }
@@ -57,7 +57,7 @@ export default function CategoryNav({
 }) {
   return (
     <Suspense>
-      <CategoryNavInner locale={locale} t={t} />
+      <CategoryNavInner t={t} />
     </Suspense>
   );
 }
