@@ -50,10 +50,11 @@ export async function searchRakutenItems(
 
   try {
     const refererValue = "https://foresight-lake-psi.vercel.app/";
-    console.log("[Rakuten] sending Referer header:", refererValue);
+    console.log("[Rakuten] sending Referer+Origin headers");
     const res = await fetch(`${ENDPOINT}?${params.toString()}`, {
       headers: {
         "Referer": refererValue,
+        "Origin": "https://foresight-lake-psi.vercel.app",
       },
       next: { revalidate: 0 },
     });
