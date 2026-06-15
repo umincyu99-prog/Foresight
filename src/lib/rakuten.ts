@@ -8,7 +8,7 @@ export interface RakutenItem {
 }
 
 const ENDPOINT =
-  "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20220601";
+  "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20220601";
 
 /**
  * キーワードで楽天市場の商品を検索し、アフィリエイトリンク付きの商品情報を返す。
@@ -19,12 +19,14 @@ export async function searchRakutenItems(
   hits = 4
 ): Promise<RakutenItem[]> {
   const appId = process.env.RAKUTEN_APP_ID;
+  const accessKey = process.env.RAKUTEN_ACCESS_KEY;
   const affiliateId = process.env.RAKUTEN_AFFILIATE_ID;
 
-  if (!appId || !keyword.trim()) return [];
+  if (!appId || !accessKey || !keyword.trim()) return [];
 
   const params = new URLSearchParams({
     applicationId: appId,
+    accessKey,
     keyword,
     hits: String(hits),
     sort: "standard",
@@ -37,6 +39,9 @@ export async function searchRakutenItems(
 
   try {
     const res = await fetch(`${ENDPOINT}?${params.toString()}`, {
+      headers: {
+        Referer: "https://foresight-lake-psi.vercel.app",
+      },
       next: { revalidate: 3600 },
     });
     if (!res.ok) return [];
