@@ -77,7 +77,7 @@ export default async function TrendCard({ trend, locale }: { trend: Trend; local
 
   return (
     <div className="card-base rounded-2xl overflow-hidden flex flex-col group animate-fade-in">
-      
+      <a
         href={trend.url}
         target="_blank"
         rel="noopener noreferrer"
@@ -128,7 +128,7 @@ export default async function TrendCard({ trend, locale }: { trend: Trend; local
         </span>
 
         {/* タイトル */}
-        
+        <a
           href={trend.url}
           target="_blank"
           rel="noopener noreferrer"
@@ -163,7 +163,7 @@ export default async function TrendCard({ trend, locale }: { trend: Trend; local
 
         {/* 関連商品（楽天アフィリエイト） */}
         {product && (
-          
+          <a
             href={product.affiliateUrl}
             target="_blank"
             rel="noopener noreferrer sponsored"
