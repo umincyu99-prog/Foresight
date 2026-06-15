@@ -22,15 +22,15 @@ export function createServiceClient() {
 }
 
 export async function getTrends(
-  category?: Trend["category"],
-  limit = 20,
-  offset = 0
+  category?: Trend["category"]
 ): Promise<Trend[]> {
- const supabase = getSupabaseClient();
+  const supabase = getSupabaseClient();
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
   let query = supabase
     .from("trends")
     .select("*")
-    .range(offset, offset + limit - 1);
+    .gte("fetched_at", since);
 
   if (category) {
     query = query.eq("category", category).order("fetched_at", { ascending: false });
