@@ -2,11 +2,12 @@ import type { Trend } from "@/types/trend";
 
 // YouTube カテゴリ ID → サイトカテゴリのマッピング
 const YT_CATEGORIES: Array<{ id: string; category: Trend["category"] }> = [
-  { id: "20", category: "gaming" }, // Gaming
-  { id: "28", category: "tech" },   // Science & Technology
+  { id: "20", category: "gaming" },       // Gaming
+  { id: "23", category: "entertainment" }, // Comedy
+  { id: "24", category: "entertainment" }, // Entertainment
+  { id: "28", category: "tech" },          // Science & Technology
 ];
 
-// タイトル・説明文からガジェット系か判定するキーワード
 const GADGET_KEYWORDS = [
   "unboxing", "review", "gadget", "drone", "camera", "smartphone", "iphone",
   "android", "laptop", "tablet", "headphone", "earphone", "earbuds", "airpods",
@@ -15,9 +16,31 @@ const GADGET_KEYWORDS = [
   "ssd", "nvme", "graphics card", "setup", "pc build",
 ];
 
-function detectGadget(title: string, description: string): boolean {
+// entertainment 内でもゲーム実況・テック系は本来カテゴリへ戻す
+const GAMING_KEYWORDS = [
+  "gameplay", "let's play", "lets play", "gaming", "playthrough",
+  "speedrun", "minecraft", "fortnite", "roblox", "among us",
+];
+const TECH_KEYWORDS = [
+  "tutorial", "programming", "coding", "software", "app", "ai ", "machine learning",
+  "data science", "cybersecurity", "hack", "linux", "python", "javascript",
+];
+
+function classify(
+  title: string,
+  description: string,
+  base: Trend["category"]
+): Trend["category"] {
   const text = (title + " " + description).toLowerCase();
-  return GADGET_KEYWORDS.some((kw) => text.includes(kw));
+
+  if (base === "tech") {
+    if (GADGET_KEYWORDS.some((kw) => text.includes(kw))) return "gadget";
+  }
+  if (base === "entertainment") {
+    if (GAMING_KEYWORDS.some((kw) => text.includes(kw))) return "gaming";
+    if (TECH_KEYWORDS.some((kw) => text.includes(kw))) return "tech";
+  }
+  return base;
 }
 
 export async function fetchYouTubeTrends(): Promise<
@@ -50,12 +73,7 @@ export async function fetchYouTubeTrends(): Promise<
         const snippet = item.snippet;
         const title = snippet.title as string;
         const description = (snippet.description ?? "") as string;
-
-        // tech カテゴリ内でもガジェット系キーワードがあれば gadget に昇格
-        const category: Trend["category"] =
-          baseCategory === "tech" && detectGadget(title, description)
-            ? "gadget"
-            : baseCategory;
+        const category = classify(title, description, baseCategory);
 
         results.push({
           source: "youtube",

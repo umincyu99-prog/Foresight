@@ -18,7 +18,7 @@ export default async function HomePage({
   const t = getMessages(l);
 
   const validCategory =
-    category === "gadget" || category === "gaming" || category === "tech"
+    category === "gadget" || category === "gaming" || category === "tech" || category === "entertainment"
       ? (category as Trend["category"])
       : undefined;
 

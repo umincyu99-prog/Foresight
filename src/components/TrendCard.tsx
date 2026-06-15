@@ -37,6 +37,11 @@ const CATEGORY_CONFIG: Record<Trend["category"], { ja: string; en: string; color
     color: "#10b981",
     bg: "rgba(16, 185, 129, 0.12)",
   },
+  entertainment: {
+    ja: "エンタメ", en: "Entertainment",
+    color: "#f43f5e",
+    bg: "rgba(244, 63, 94, 0.12)",
+  },
 };
 
 function formatScore(n: number): string {

@@ -1,5 +1,5 @@
 export type TrendSource = "reddit" | "youtube" | "producthunt";
-export type TrendCategory = "gadget" | "gaming" | "tech";
+export type TrendCategory = "gadget" | "gaming" | "tech" | "entertainment";
 
 export interface Trend {
   id: string;
