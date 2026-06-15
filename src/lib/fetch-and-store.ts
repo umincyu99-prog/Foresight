@@ -2,6 +2,7 @@ import { createServiceClient } from "./supabase";
 import { fetchRedditTrends } from "./reddit";
 import { fetchYouTubeTrends } from "./youtube";
 import { fetchProductHuntTrends } from "./producthunt";
+import { fetchHackerNewsTrends } from "./hackernews";
 import { translateBatch } from "./deepl";
 import type { Trend } from "@/types/trend";
 
@@ -28,6 +29,9 @@ function getEnabledSources() {
   ) {
     sources.push({ name: "ProductHunt", fetch: fetchProductHuntTrends });
   }
+
+  // Hacker News (Algolia API) は API キー不要のため常時有効
+  sources.push({ name: "HackerNews", fetch: fetchHackerNewsTrends });
 
   return sources;
 }
@@ -60,7 +64,7 @@ export async function fetchAndStoreTrends(): Promise<{
   const skipped: string[] = [];
   let inserted = 0;
 
-  const allSources = ["Reddit", "YouTube", "ProductHunt"];
+  const allSources = ["Reddit", "YouTube", "ProductHunt", "HackerNews"];
   const enabled = getEnabledSources();
   const enabledNames = enabled.map((s) => s.name);
 
