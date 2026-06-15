@@ -48,6 +48,7 @@ export async function searchRakutenItems(
   if (affiliateId) params.set("affiliateId", affiliateId);
 
   try {
+    console.log("[Rakuten] sending Referer:", "https://foresight-lake-psi.vercel.app");
     const res = await fetch(`${ENDPOINT}?${params.toString()}`, {
       headers: {
         Referer: "https://foresight-lake-psi.vercel.app",

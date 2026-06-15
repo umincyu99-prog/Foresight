@@ -1,6 +1,5 @@
 import type { Trend } from "@/types/trend";
 import type { Locale } from "@/lib/i18n";
-import { searchRakutenItems, extractKeyword } from "@/lib/rakuten";
 
 /* ===== ソース設定 ===== */
 const SOURCE_CONFIG: Record<Trend["source"], { label: string; color: string; icon: string }> = {
@@ -61,7 +60,7 @@ function formatScore(n: number): string {
   return n.toString();
 }
 
-export default async function TrendCard({ trend, locale }: { trend: Trend; locale: Locale }) {
+export default function TrendCard({ trend, locale }: { trend: Trend; locale: Locale }) {
   const title   = locale === "ja" && trend.title_ja   ? trend.title_ja   : trend.title_en;
   const summary = locale === "ja" && trend.summary_ja ? trend.summary_ja : trend.summary_en;
   const source  = SOURCE_CONFIG[trend.source];
@@ -71,9 +70,6 @@ export default async function TrendCard({ trend, locale }: { trend: Trend; local
     { month: "short", day: "numeric" }
   );
 
-  const keyword = extractKeyword(trend.title_ja, trend.title_en);
-  const items   = locale === "ja" ? await searchRakutenItems(keyword, 1) : [];
-  const product = items[0];
 
   return (
     <div className="card-base rounded-2xl overflow-hidden flex flex-col group animate-fade-in">
@@ -161,38 +157,6 @@ export default async function TrendCard({ trend, locale }: { trend: Trend; local
           </span>
         </div>
 
-        {/* 関連商品（楽天アフィリエイト） */}
-        {product && (
-          <a
-            href={product.affiliateUrl}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            className="flex items-center gap-2 mt-1 p-2 rounded-xl border transition-colors hover:border-indigo-400/50"
-            style={{ borderColor: "var(--border)", background: "var(--bg)" }}
-          >
-            {product.imageUrl && (
-              <img
-                src={product.imageUrl}
-                alt=""
-                className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
-              />
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] leading-tight line-clamp-2" style={{ color: "var(--text)" }}>
-                {product.itemName}
-              </p>
-              <p className="text-[10px] font-bold mt-0.5" style={{ color: "#bf0000" }}>
-                ¥{product.itemPrice.toLocaleString()}
-              </p>
-            </div>
-            <span
-              className="text-[9px] font-bold px-1.5 py-0.5 rounded flex-shrink-0"
-              style={{ color: "#bf0000", background: "#bf000018" }}
-            >
-              楽天
-            </span>
-          </a>
-        )}
       </div>
     </div>
   );
