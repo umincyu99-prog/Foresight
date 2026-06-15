@@ -1,5 +1,6 @@
 import { getTrends } from "@/lib/supabase";
 import { isValidLocale, getMessages } from "@/lib/i18n";
+import { searchRakutenItems } from "@/lib/rakuten";
 import TrendCard from "@/components/TrendCard";
 import RakutenPromo from "@/components/RakutenPromo";
 import type { Trend } from "@/types/trend";
@@ -34,6 +35,11 @@ export default async function HomePage({
   const trends = await getTrends(validCategory);
   const promoKeyword = PROMO_KEYWORDS[validCategory ?? "gadget"];
 
+  // 1回のAPI呼び出しで最大12件取得し、先頭4件をプロモ・残り8件をカードに配分
+  const rakutenItems = l === "ja" ? await searchRakutenItems(promoKeyword, 12) : [];
+  const promoItems = rakutenItems.slice(0, 4);
+  const cardProducts = rakutenItems.slice(4);
+
   if (trends.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-32 gap-4">
@@ -50,7 +56,7 @@ export default async function HomePage({
   return (
     <>
       <RakutenPromo
-        keyword={promoKeyword}
+        items={promoItems}
         locale={l}
         heading={t.rakuten.heading}
         badge={t.rakuten.badge}
@@ -58,7 +64,7 @@ export default async function HomePage({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {trends.map((trend, i) => (
           <div key={trend.id} style={{ animationDelay: `${i * 30}ms` }}>
-            <TrendCard trend={trend} locale={l} />
+            <TrendCard trend={trend} locale={l} product={cardProducts[i]} />
           </div>
         ))}
       </div>

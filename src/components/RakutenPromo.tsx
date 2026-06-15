@@ -1,21 +1,18 @@
-import { searchRakutenItems } from "@/lib/rakuten";
+import type { RakutenItem } from "@/lib/rakuten";
 import type { Locale } from "@/lib/i18n";
 
-export default async function RakutenPromo({
-  keyword,
+export default function RakutenPromo({
+  items,
   locale,
   heading,
   badge,
 }: {
-  keyword: string;
+  items: RakutenItem[];
   locale: Locale;
   heading: string;
   badge: string;
 }) {
-  if (locale !== "ja") return null;
-
-  const items = await searchRakutenItems(keyword, 4);
-  if (items.length === 0) return null;
+  if (locale !== "ja" || items.length === 0) return null;
 
   return (
     <section className="mb-6">
@@ -34,7 +31,7 @@ export default async function RakutenPromo({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {items.map((item, i) => (
           <a
-            key={i}      
+            key={i}
             href={item.affiliateUrl}
             target="_blank"
             rel="noopener noreferrer sponsored"

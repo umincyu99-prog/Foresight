@@ -22,15 +22,7 @@ export async function searchRakutenItems(
   const accessKey = process.env.RAKUTEN_ACCESS_KEY;
   const affiliateId = process.env.RAKUTEN_AFFILIATE_ID;
 
-  console.log("[Rakuten] called", {
-    keyword,
-    hasAppId: !!appId,
-    hasAccessKey: !!accessKey,
-    hasAffiliateId: !!affiliateId,
-  });
-
   if (!appId || !accessKey || !keyword.trim()) {
-    console.log("[Rakuten] early return - missing config or keyword");
     return [];
   }
 
@@ -50,7 +42,6 @@ export async function searchRakutenItems(
 
   try {
     const refererValue = "https://foresight-lake-psi.vercel.app/";
-    console.log("[Rakuten] sending Referer+Origin headers");
     const res = await fetch(`${ENDPOINT}?${params.toString()}`, {
       headers: {
         "Referer": refererValue,
@@ -58,10 +49,9 @@ export async function searchRakutenItems(
       },
       next: { revalidate: 0 },
     });
-    console.log("[Rakuten] response status:", res.status);
     if (!res.ok) {
       const text = await res.text();
-      console.log("[Rakuten] error body:", text.slice(0, 500));
+      console.error("[Rakuten] HTTP error", res.status, text.slice(0, 200));
       return [];
     }
 
