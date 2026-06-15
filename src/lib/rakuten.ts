@@ -22,7 +22,17 @@ export async function searchRakutenItems(
   const accessKey = process.env.RAKUTEN_ACCESS_KEY;
   const affiliateId = process.env.RAKUTEN_AFFILIATE_ID;
 
-  if (!appId || !accessKey || !keyword.trim()) return [];
+  console.log("[Rakuten] called", {
+    keyword,
+    hasAppId: !!appId,
+    hasAccessKey: !!accessKey,
+    hasAffiliateId: !!affiliateId,
+  });
+
+  if (!appId || !accessKey || !keyword.trim()) {
+    console.log("[Rakuten] early return - missing config or keyword");
+    return [];
+  }
 
   const params = new URLSearchParams({
     applicationId: appId,
