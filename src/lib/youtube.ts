@@ -60,7 +60,7 @@ function classify(
   return base;
 }
 
-export async function fetchYouTubeTrends(): Promise
+export async function fetchYouTubeTrends(): Promise<
   Omit<Trend, "id" | "title_ja" | "summary_ja" | "fetched_at">[]
 > {
   const key = process.env.YOUTUBE_API_KEY;
