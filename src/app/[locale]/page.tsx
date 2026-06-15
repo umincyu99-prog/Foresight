@@ -11,6 +11,7 @@ const PROMO_KEYWORDS: Record<string, string> = {
   gaming: "ゲーミング グッズ",
   tech: "PC 周辺機器",
   entertainment: "ホビー グッズ",
+  ai: "AI ガジェット",
 };
 
 export default async function HomePage({
@@ -26,7 +27,7 @@ export default async function HomePage({
   const t = getMessages(l);
 
   const validCategory =
-    category === "gadget" || category === "gaming" || category === "tech" || category === "entertainment"
+    category === "gadget" || category === "gaming" || category === "tech" || category === "entertainment" || category === "ai"
       ? (category as Trend["category"])
       : undefined;
 
