@@ -33,6 +33,13 @@ const TECH_KEYWORDS = [
   "data science", "cybersecurity", "hack", "linux", "python", "javascript",
 ];
 
+// tech カテゴリ内で AI 関連と判定するキーワード
+const AI_KEYWORDS = [
+  "ai ", " ai", "artificial intelligence", "chatgpt", "openai", "gpt-",
+  "machine learning", "llm", "claude", "gemini", "midjourney", "stable diffusion",
+  "neural network", "deep learning", "anthropic", "copilot", "generative ai",
+];
+
 function classify(
   title: string,
   description: string,
@@ -41,17 +48,19 @@ function classify(
   const text = (title + " " + description).toLowerCase();
 
   if (base === "tech") {
+    if (AI_KEYWORDS.some((kw) => text.includes(kw))) return "ai";
     if (GADGET_KEYWORDS.some((kw) => text.includes(kw))) return "gadget";
     if (ENTERTAINMENT_SIGNALS.some((kw) => text.includes(kw))) return "entertainment";
   }
   if (base === "entertainment") {
     if (GAMING_KEYWORDS.some((kw) => text.includes(kw))) return "gaming";
+    if (AI_KEYWORDS.some((kw) => text.includes(kw))) return "ai";
     if (TECH_KEYWORDS.some((kw) => text.includes(kw))) return "tech";
   }
   return base;
 }
 
-export async function fetchYouTubeTrends(): Promise<
+export async function fetchYouTubeTrends(): Promise
   Omit<Trend, "id" | "title_ja" | "summary_ja" | "fetched_at">[]
 > {
   const key = process.env.YOUTUBE_API_KEY;
@@ -59,7 +68,7 @@ export async function fetchYouTubeTrends(): Promise<
 
   const seen = new Set<string>();
   const results: Omit<Trend, "id" | "title_ja" | "summary_ja" | "fetched_at">[] = [];
-  const REGIONS = ["US", "GB"];
+  const REGIONS = ["US", "GB", "JP"];
 
   for (const { id: categoryId, category: baseCategory } of YT_CATEGORIES) {
     for (const region of REGIONS) {
