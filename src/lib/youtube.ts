@@ -8,6 +8,13 @@ const YT_CATEGORIES: Array<{ id: string; category: Trend["category"] }> = [
   { id: "28", category: "tech" },          // Science & Technology
 ];
 
+// tech カテゴリ内でもエンタメ系と判定するキーワード
+const ENTERTAINMENT_SIGNALS = [
+  "reaction", "react", "moments", "funny", "meme", "viral", "challenge",
+  "prank", "compilation", "fails", "hilarious", "wtf", "best of", "😂", "🤣",
+  "try not to laugh", "shocking", "unexpected", "you won't believe",
+];
+
 const GADGET_KEYWORDS = [
   "unboxing", "review", "gadget", "drone", "camera", "smartphone", "iphone",
   "android", "laptop", "tablet", "headphone", "earphone", "earbuds", "airpods",
@@ -35,6 +42,7 @@ function classify(
 
   if (base === "tech") {
     if (GADGET_KEYWORDS.some((kw) => text.includes(kw))) return "gadget";
+    if (ENTERTAINMENT_SIGNALS.some((kw) => text.includes(kw))) return "entertainment";
   }
   if (base === "entertainment") {
     if (GAMING_KEYWORDS.some((kw) => text.includes(kw))) return "gaming";

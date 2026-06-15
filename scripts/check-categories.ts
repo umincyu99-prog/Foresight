@@ -27,7 +27,7 @@ async function main() {
   }
 
   console.log("\n各カテゴリのサンプル:");
-  for (const cat of ["gadget", "gaming", "tech"]) {
+  for (const cat of ["gadget", "gaming", "tech", "entertainment"]) {
     const samples = (data ?? []).filter((r) => r.category === cat).slice(0, 2);
     if (samples.length) {
       console.log(`\n[${cat}]`);
