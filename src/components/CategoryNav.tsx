@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Suspense } from "react";
 
-type NavKeys = "all" | "gadget" | "gaming" | "tech" | "entertainment";
+type NavKeys = "all" | "gadget" | "gaming" | "tech" | "entertainment" | "ai";
 
 const CATEGORY_COLORS: Record<NavKeys, string> = {
   all:           "#6366f1",
@@ -11,6 +11,7 @@ const CATEGORY_COLORS: Record<NavKeys, string> = {
   gaming:        "#a855f7",
   tech:          "#10b981",
   entertainment: "#f43f5e",
+  ai:            "#eab308",
 };
 
 function CategoryNavInner({ t }: { t: Record<NavKeys, string> }) {
@@ -27,7 +28,7 @@ function CategoryNavInner({ t }: { t: Record<NavKeys, string> }) {
 
   return (
     <nav className="flex items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-none">
-      {(["all", "gadget", "gaming", "tech", "entertainment"] as NavKeys[]).map((cat) => {
+      {(["all", "gadget", "gaming", "tech", "ai", "entertainment"] as NavKeys[]).map((cat) => {
         const isActive = active === cat;
         const color    = CATEGORY_COLORS[cat];
         return (
