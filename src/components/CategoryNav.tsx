@@ -34,7 +34,7 @@ function CategoryNavInner({ t }: { t: Record<NavKeys, string> }) {
           <button
             key={cat}
             onClick={() => navigate(cat)}
-            className="whitespace-nowrap px-3 py-1 rounded-full text-xs font-semibold transition-all"
+            className="whitespace-nowrap px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer"
             style={
               isActive
                 ? { background: color + "22", color, border: `1px solid ${color}55` }
