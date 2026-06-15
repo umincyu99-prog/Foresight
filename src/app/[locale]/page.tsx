@@ -4,7 +4,7 @@ import TrendCard from "@/components/TrendCard";
 import RakutenPromo from "@/components/RakutenPromo";
 import type { Trend } from "@/types/trend";
 
-export const revalidate = 3600;
+export const revalidate = 0;
 
 const PROMO_KEYWORDS: Record<string, string> = {
   gadget: "ガジェット 便利グッズ",
