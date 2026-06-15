@@ -11,7 +11,7 @@ function getTranslator(): deepl.Translator {
 
 export async function translateToJapanese(text: string): Promise<string> {
   if (!text.trim()) return "";
-  const result = await getTranslator().translateText(text, "en", "ja");
+  const result = await getTranslator().translateText(text, null, "ja");
   return result.text;
 }
 
@@ -21,7 +21,7 @@ export async function translateBatch(
   const nonEmpty = texts.filter((t) => t.trim());
   if (nonEmpty.length === 0) return texts.map(() => "");
 
-  const results = await getTranslator().translateText(nonEmpty, "en", "ja");
+  const results = await getTranslator().translateText(nonEmpty, null, "ja");
   const translated = (Array.isArray(results) ? results : [results]).map(
     (r: deepl.TextResult) => r.text
   );
