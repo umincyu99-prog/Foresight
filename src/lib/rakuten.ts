@@ -46,14 +46,16 @@ export async function searchRakutenItems(
   });
 
   if (affiliateId) params.set("affiliateId", affiliateId);
+  params.set("referer", "https://foresight-lake-psi.vercel.app");
 
   try {
-    console.log("[Rakuten] sending Referer:", "https://foresight-lake-psi.vercel.app");
+    const refererValue = "https://foresight-lake-psi.vercel.app/";
+    console.log("[Rakuten] sending Referer header:", refererValue);
     const res = await fetch(`${ENDPOINT}?${params.toString()}`, {
       headers: {
-        Referer: "https://foresight-lake-psi.vercel.app",
+        "Referer": refererValue,
       },
-      next: { revalidate: 3600 },
+      next: { revalidate: 0 },
     });
     console.log("[Rakuten] response status:", res.status);
     if (!res.ok) {
