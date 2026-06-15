@@ -22,7 +22,7 @@ export default async function HomePage({
       ? (category as Trend["category"])
       : undefined;
 
-  const trends = await getTrends(validCategory, 24);
+  const trends = await getTrends(validCategory);
 
   if (trends.length === 0) {
     return (
