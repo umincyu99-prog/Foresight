@@ -59,9 +59,12 @@ export async function fetchProductHuntTrends(): Promise<
       (node.topics as { edges: { node: { name: string } }[] })?.edges ?? []
     ).map((e) => e.node.name.toLowerCase());
 
-    const category: Trend["category"] = topics.includes("gaming")
+    const GAMING_TOPICS = ["gaming", "games", "game development", "augmented reality", "virtual reality"];
+    const GADGET_TOPICS = ["hardware", "gadgets", "wearables", "smart home", "3d printing", "drones", "iphone", "android"];
+
+    const category: Trend["category"] = topics.some((t) => GAMING_TOPICS.includes(t))
       ? "gaming"
-      : topics.some((t) => ["gadgets", "hardware"].includes(t))
+      : topics.some((t) => GADGET_TOPICS.includes(t))
       ? "gadget"
       : "tech";
 
