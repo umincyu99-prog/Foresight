@@ -15,6 +15,10 @@
     "source": "Source",
     "score": "Score"
   },
+  "rakuten": {
+    "heading": "Recommended Products",
+    "badge": "Rakuten"
+  },
   "empty": "No trends available",
   "loading": "Loading..."
 }
