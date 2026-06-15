@@ -17,7 +17,7 @@ interface AlgoliaHit {
  * AI カテゴリのトレンドとして返す。
  * タイトル・リンク・スコアのみを利用し、本文の転載は行わない。
  */
-export async function fetchHackerNewsTrends(): Promise
+export async function fetchHackerNewsTrends(): Promise<
   Omit<Trend, "id" | "title_ja" | "summary_ja" | "fetched_at">[]
 > {
   const seen = new Set<string>();
