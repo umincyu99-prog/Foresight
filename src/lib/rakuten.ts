@@ -54,7 +54,12 @@ export async function searchRakutenItems(
       },
       next: { revalidate: 3600 },
     });
-    if (!res.ok) return [];
+    console.log("[Rakuten] response status:", res.status);
+    if (!res.ok) {
+      const text = await res.text();
+      console.log("[Rakuten] error body:", text.slice(0, 500));
+      return [];
+    }
 
     const data = await res.json();
     const items = data?.Items as Array<Record<string, unknown>> | undefined;
