@@ -26,15 +26,16 @@ export async function getTrends(
   limit = 20,
   offset = 0
 ): Promise<Trend[]> {
-  const supabase = getSupabaseClient();
+ const supabase = getSupabaseClient();
   let query = supabase
     .from("trends")
     .select("*")
-    .order("fetched_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
   if (category) {
-    query = query.eq("category", category);
+    query = query.eq("category", category).order("fetched_at", { ascending: false });
+  } else {
+    query = query.order("score", { ascending: false }).order("fetched_at", { ascending: false });
   }
 
   const { data, error } = await query;
