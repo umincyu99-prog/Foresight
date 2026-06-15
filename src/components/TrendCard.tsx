@@ -1,5 +1,6 @@
 import type { Trend } from "@/types/trend";
 import type { Locale } from "@/lib/i18n";
+import { searchRakutenItems, extractKeyword } from "@/lib/rakuten";
 
 /* ===== ソース設定 ===== */
 const SOURCE_CONFIG: Record<Trend["source"], { label: string; color: string; icon: string }> = {
@@ -50,7 +51,7 @@ function formatScore(n: number): string {
   return n.toString();
 }
 
-export default function TrendCard({ trend, locale }: { trend: Trend; locale: Locale }) {
+export default async function TrendCard({ trend, locale }: { trend: Trend; locale: Locale }) {
   const title   = locale === "ja" && trend.title_ja   ? trend.title_ja   : trend.title_en;
   const summary = locale === "ja" && trend.summary_ja ? trend.summary_ja : trend.summary_en;
   const source  = SOURCE_CONFIG[trend.source];
@@ -60,45 +61,51 @@ export default function TrendCard({ trend, locale }: { trend: Trend; locale: Loc
     { month: "short", day: "numeric" }
   );
 
+  const keyword = extractKeyword(trend.title_ja, trend.title_en);
+  const items   = locale === "ja" ? await searchRakutenItems(keyword, 1) : [];
+  const product = items[0];
+
   return (
-    <a
-      href={trend.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="card-base rounded-2xl overflow-hidden flex flex-col group animate-fade-in block"
-    >
-      {/* サムネイル */}
-      {trend.thumbnail ? (
-        <div className="relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-          <img
-            src={trend.thumbnail}
-            alt=""
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          {/* ソースバッジ（画像上） */}
-          <div
-            className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold backdrop-blur-sm"
-            style={{ background: source.color + "cc" }}
-          >
-            <span dangerouslySetInnerHTML={{ __html: source.icon }} />
-            {source.label}
+    <div className="card-base rounded-2xl overflow-hidden flex flex-col group animate-fade-in">
+      
+        href={trend.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block"
+      >
+        {/* サムネイル */}
+        {trend.thumbnail ? (
+          <div className="relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+            <img
+              src={trend.thumbnail}
+              alt=""
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            {/* ソースバッジ（画像上） */}
+            <div
+              className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold backdrop-blur-sm"
+              style={{ background: source.color + "cc" }}
+            >
+              <span dangerouslySetInnerHTML={{ __html: source.icon }} />
+              {source.label}
+            </div>
           </div>
-        </div>
-      ) : (
-        /* サムネなし: グラデーションプレースホルダー */
-        <div
-          className="aspect-video flex items-center justify-center"
-          style={{ background: `linear-gradient(135deg, ${cat.color}22, ${cat.color}08)` }}
-        >
-          <span
-            className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold text-white"
-            style={{ background: source.color + "cc" }}
+        ) : (
+          /* サムネなし: グラデーションプレースホルダー */
+          <div
+            className="aspect-video flex items-center justify-center"
+            style={{ background: `linear-gradient(135deg, ${cat.color}22, ${cat.color}08)` }}
           >
-            <span dangerouslySetInnerHTML={{ __html: source.icon }} />
-            {source.label}
-          </span>
-        </div>
-      )}
+            <span
+              className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold text-white"
+              style={{ background: source.color + "cc" }}
+            >
+              <span dangerouslySetInnerHTML={{ __html: source.icon }} />
+              {source.label}
+            </span>
+          </div>
+        )}
+      </a>
 
       {/* コンテンツ */}
       <div className="p-4 flex flex-col flex-1 gap-2">
@@ -111,14 +118,20 @@ export default function TrendCard({ trend, locale }: { trend: Trend; locale: Loc
         </span>
 
         {/* タイトル */}
-        <h2
-          className="font-semibold text-sm leading-snug line-clamp-2 transition-colors"
-          style={{ color: "var(--text)" }}
+        
+          href={trend.url}
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <span className="group-hover:text-indigo-400 dark:group-hover:text-indigo-300 transition-colors">
-            {title}
-          </span>
-        </h2>
+          <h2
+            className="font-semibold text-sm leading-snug line-clamp-2 transition-colors"
+            style={{ color: "var(--text)" }}
+          >
+            <span className="group-hover:text-indigo-400 dark:group-hover:text-indigo-300 transition-colors">
+              {title}
+            </span>
+          </h2>
+        </a>
 
         {/* 概要 */}
         {summary && (
@@ -137,7 +150,40 @@ export default function TrendCard({ trend, locale }: { trend: Trend; locale: Loc
             ▲ {formatScore(trend.score)}
           </span>
         </div>
+
+        {/* 関連商品（楽天アフィリエイト） */}
+        {product && (
+          
+            href={product.affiliateUrl}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="flex items-center gap-2 mt-1 p-2 rounded-xl border transition-colors hover:border-indigo-400/50"
+            style={{ borderColor: "var(--border)", background: "var(--bg)" }}
+          >
+            {product.imageUrl && (
+              <img
+                src={product.imageUrl}
+                alt=""
+                className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
+              />
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] leading-tight line-clamp-2" style={{ color: "var(--text)" }}>
+                {product.itemName}
+              </p>
+              <p className="text-[10px] font-bold mt-0.5" style={{ color: "#bf0000" }}>
+                ¥{product.itemPrice.toLocaleString()}
+              </p>
+            </div>
+            <span
+              className="text-[9px] font-bold px-1.5 py-0.5 rounded flex-shrink-0"
+              style={{ color: "#bf0000", background: "#bf000018" }}
+            >
+              楽天
+            </span>
+          </a>
+        )}
       </div>
-    </a>
+    </div>
   );
 }
