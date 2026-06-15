@@ -1,9 +1,17 @@
 import { getTrends } from "@/lib/supabase";
 import { isValidLocale, getMessages } from "@/lib/i18n";
 import TrendCard from "@/components/TrendCard";
+import RakutenPromo from "@/components/RakutenPromo";
 import type { Trend } from "@/types/trend";
 
 export const revalidate = 3600;
+
+const PROMO_KEYWORDS: Record<string, string> = {
+  gadget: "ガジェット 便利グッズ",
+  gaming: "ゲーミング グッズ",
+  tech: "PC 周辺機器",
+  entertainment: "ホビー グッズ",
+};
 
 export default async function HomePage({
   params,
@@ -23,6 +31,7 @@ export default async function HomePage({
       : undefined;
 
   const trends = await getTrends(validCategory);
+  const promoKeyword = PROMO_KEYWORDS[validCategory ?? "gadget"];
 
   if (trends.length === 0) {
     return (
@@ -38,12 +47,20 @@ export default async function HomePage({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {trends.map((trend, i) => (
-        <div key={trend.id} style={{ animationDelay: `${i * 30}ms` }}>
-          <TrendCard trend={trend} locale={l} />
-        </div>
-      ))}
-    </div>
+    <>
+      <RakutenPromo
+        keyword={promoKeyword}
+        locale={l}
+        heading={t.rakuten.heading}
+        badge={t.rakuten.badge}
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {trends.map((trend, i) => (
+          <div key={trend.id} style={{ animationDelay: `${i * 30}ms` }}>
+            <TrendCard trend={trend} locale={l} />
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
