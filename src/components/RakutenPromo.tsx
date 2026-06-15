@@ -15,9 +15,9 @@ export default function RakutenPromo({
   if (locale !== "ja" || items.length === 0) return null;
 
   return (
-    <section className="mb-6">
+    <section className="mb-3">
       <h2
-        className="text-xs font-bold mb-2 flex items-center gap-2"
+        className="text-[10px] font-bold mb-1.5 flex items-center gap-1.5"
         style={{ color: "var(--text-muted)" }}
       >
         {heading}
@@ -28,29 +28,36 @@ export default function RakutenPromo({
           {badge}
         </span>
       </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="flex gap-2 overflow-x-auto scrollbar-none pb-0.5">
         {items.map((item, i) => (
           <a
             key={i}
             href={item.affiliateUrl}
             target="_blank"
             rel="noopener noreferrer sponsored"
-            className="card-base rounded-xl overflow-hidden flex flex-col group"
+            className="flex items-center gap-2 flex-shrink-0 w-44 p-2 rounded-xl border transition-colors hover:border-indigo-400/50"
+            style={{ borderColor: "var(--border)", background: "var(--bg-card)" }}
           >
-            {item.imageUrl && (
-              <div className="aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                <img
-                  src={item.imageUrl}
-                  alt=""
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
+            {item.imageUrl ? (
+              <img
+                src={item.imageUrl}
+                alt=""
+                className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+              />
+            ) : (
+              <div
+                className="w-16 h-16 rounded-lg flex-shrink-0"
+                style={{ background: "var(--bg)" }}
+              />
             )}
-            <div className="p-2 flex flex-col gap-1">
-              <p className="text-[10px] leading-tight line-clamp-2" style={{ color: "var(--text)" }}>
+            <div className="flex-1 min-w-0">
+              <p
+                className="text-[10px] leading-snug line-clamp-2"
+                style={{ color: "var(--text)" }}
+              >
                 {item.itemName}
               </p>
-              <p className="text-[11px] font-bold" style={{ color: "#bf0000" }}>
+              <p className="text-[11px] font-bold mt-1" style={{ color: "#bf0000" }}>
                 ¥{item.itemPrice.toLocaleString()}
               </p>
             </div>
