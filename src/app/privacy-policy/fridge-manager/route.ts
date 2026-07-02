@@ -61,7 +61,7 @@ const HTML = String.raw`<!DOCTYPE html>
     <h2>7. お問い合わせ先</h2>
     <div class="contact">
       <p><strong>ポンコツスタジオ</strong></p>
-      <p>Eメール：<a href="mailto:umincyu99@gmail.com">umincyu99@gmail.com</a></p>
+      <p>Eメール：<a href="mailto:shortvv01fnevvs@gmail.com">shortvv01fnevvs@gmail.com</a></p>
     </div>
     <h2>8. 本ポリシーの変更について</h2>
     <p>当方は、必要に応じて本ポリシーの内容を変更することがあります。変更後のプライバシーポリシーは、本ページに掲載された時点から効力を生じるものとします。</p>
